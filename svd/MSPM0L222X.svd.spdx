@@ -1,0 +1,21 @@
+SPDXVersion: SPDX-2.2
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: max78000.svd SPDX Document
+DocumentNamespace: http://spdx.org/spdxdocs/max78000.svd-4dc7b1e8c690666a8b475207180f6424b67de48850318c21ba928df1c17261b1
+Creator: Organization: SIGPwny
+Created: 2025-09-02T22:00:00Z
+
+##### Package Information #####
+PackageName: TexasInstruments.MSPM0L122X_L222X_DFP.1.1.1.zip
+SPDXID: SPDXRef-Package-TexasInstruments.MSPM0L122X_L222X_DFP.1.1.1.zip
+PackageVersion: N/A
+PackageFileName: TexasInstruments.MSPM0L122X_L222X_DFP.1.1.1.zip
+PackageSupplier: Organization: Texas Instruments Incorporated
+PackageDownloadLocation: https://software-dl.ti.com/msp430/esd/MSPM0-CMSIS/MSPM0L122X_L222X/latest/exports/TexasInstruments.MSPM0L122X_L222X_DFP.1.1.1.pack
+PackageChecksum: SHA1: db51622115ee360daeef2fab1cc2aa350880e990
+PackageChecksum: SHA256: 6a9c34f227930e0fc0242f70c6e808d99b933857e01df4e7ed3e07f9e1ca703d
+FilesAnalyzed: true
+PackageLicenseConcluded: BSD-3-Clause
+PackageLicenseDeclared: BSD-3-Clause
+PackageCopyrightText: Copyright (c) 2023, Texas Instruments Incorporated 

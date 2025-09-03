@@ -1,0 +1,83 @@
+# Path to the SVD file we're targeting. Relative to this file.
+# This must be included only in the device YAML file.
+_svd: "./MSPM0L222X.svd"
+
+# The CTR_WIDTH field in the AESADV_CTRL register has different uses depending
+# on whether the CTR or CFB fields are set. The SVD file does not handle all
+# of the cases for CFB mode and also added duplicate enumerated values.
+# This is resolved by combining the CTR_WIDTH enumerated value definitions.
+#
+# The OFB_GCM_CCM_CONT field also has a dual use depending on whether
+# OFB mode or CCM/GCM mode is selected.
+AESADV:
+  AESADV_CTRL:
+    _delete:
+      - CTR_WIDTH
+      - OFB_GCM_CCM_CONT
+    _add:
+      CTR_WIDTH:
+        description: |
+          When the CTR bit is set, specifies the counter width for AES-CTR mode.
+          When the CFB bit is set, specifies the CFB mode feedback width:
+        bitOffset: 7
+        bitWidth: 2
+        access: read-write
+      OFB_GCM_CCM_CONT:
+        description: |
+          This bit has a dual use, depending on the selection of CCM/GCM, see bits [18:16].
+          If CCM/GCM is not selected:
+          If this bit is set to 1b, full block AES output feedback mode (OFB-128) is selected.
+          If CCM/GCM is selected:
+          Continue processing of an interrupted AES-GCM or AES-CCM operation in the AAD phase.
+          Set this write-only signal to 1b together with the regular mode bit settings for a GCM or CCM operation, to continue processing from the next full AAD block (128 bits) boundary.
+          Before setting this bit all applicable context to resume processing must have been loaded into the engine: Keys, IV, intermediate digest/TAG, block counter and the CCM align data word (the latter is for CCM mode only). The mode can be written together with this bit, as it is part of the same register.
+        bitOffset: 26
+        bitWidth: 1
+        access: read-write
+    CTR_WIDTH:
+      _write:
+        CTR32_OR_CFB128: [0x0, "CTR: 32-bit counter; CFB: CFB-128 mode"]
+        CTR64_OR_CFB1: [0x1, "CTR: 64-bit counter; CFB: CFB-1 mode"]
+        CTR96_OR_CFB8: [0x2, "CTR: 96-bit counter; CFB: CFB-8 mode"]
+        CTR128: [0x3, "CTR: 128-bit counter; CFB: undefined"]
+    OFB_GCM_CCM_CONT:
+      _write:
+        OFB_OR_GCM_CCM_CONT: [0x1, "OFB: Enable OFB; CCM/GCM: Continue GCM/CCM processing in AAD phase"]
+
+COMP0:
+  # According to the vendor, the COMP0_CPU_INT_IIDX.STAT field has enumerated
+  # values set to 0, 2, 3, 4 when the field itself is only 2 bits wide.
+  # We're going to assume that the values are actually 0, 1, 2, 3.
+  "COMP0_CPU_INT\\[%s\\]":
+    COMP0_CPU_INT_IIDX:
+      _delete: STAT
+      _add:
+        STAT:
+          description: "Interrupt index status"
+          bitOffset: 0
+          bitWidth: 2
+          access: read-only
+      STAT:
+        _read:
+          NO_INTR: [0x0, "No pending interrupt"]
+          COMPIFG: [0x1, "Comparator output interrupt"]
+          COMPINVIFG: [0x2, "Comparator output inverted interrupt"]
+          OUTRDYIFG: [0x3, "Comparator output ready interrupt"]
+  # According to the vendor, the COMP0_GEN_EVENT_IIDX.STAT field has enumerated
+  # values set to 0, 2, 3, 4 when the field itself is only 2 bits wide.
+  # We're going to assume that the values are actually 0, 1, 2, 3.
+  "COMP0_GEN_EVENT\\[%s\\]":
+    COMP0_GEN_EVENT_IIDX:
+      _delete: STAT
+      _add:
+        STAT:
+          description: "Interrupt index status"
+          bitOffset: 0
+          bitWidth: 2
+          access: read-only
+      STAT:
+        _read:
+          NO_INTR: [0x0, "No pending interrupt"]
+          COMPIFG: [0x1, "Comparator output interrupt"]
+          COMPINVIFG: [0x2, "Comparator output inverted interrupt"]
+          OUTRDYIFG: [0x3, "Comparator output ready interrupt"]
