@@ -12,7 +12,31 @@ use generic::*;
 #[doc = r"Common register and bit access and modify traits"]
 pub mod generic;
 #[cfg(feature = "rt")]
-extern "C" {}
+extern "C" {
+    fn INT_GROUP0();
+    fn INT_GROUP1();
+    fn TIMG12();
+    fn UART4();
+    fn ADC0();
+    fn SPI0();
+    fn SPI1();
+    fn UART2();
+    fn UART3();
+    fn UART0();
+    fn UART1();
+    fn TIMA0();
+    fn TIMG8();
+    fn TIMG0();
+    fn TIMG4();
+    fn TIMG5();
+    fn I2C0();
+    fn I2C1();
+    fn I2C2();
+    fn AESADV();
+    fn LCD0();
+    fn LFSS();
+    fn DMA0();
+}
 #[doc(hidden)]
 #[repr(C)]
 pub union Vector {
@@ -23,14 +47,99 @@ pub union Vector {
 #[doc(hidden)]
 #[link_section = ".vector_table.interrupts"]
 #[no_mangle]
-pub static __INTERRUPTS: [Vector; 0] = [];
+pub static __INTERRUPTS: [Vector; 32] = [
+    Vector {
+        _handler: INT_GROUP0,
+    },
+    Vector {
+        _handler: INT_GROUP1,
+    },
+    Vector { _handler: TIMG12 },
+    Vector { _handler: UART4 },
+    Vector { _handler: ADC0 },
+    Vector { _reserved: 0 },
+    Vector { _reserved: 0 },
+    Vector { _reserved: 0 },
+    Vector { _reserved: 0 },
+    Vector { _handler: SPI0 },
+    Vector { _handler: SPI1 },
+    Vector { _reserved: 0 },
+    Vector { _reserved: 0 },
+    Vector { _handler: UART2 },
+    Vector { _handler: UART3 },
+    Vector { _handler: UART0 },
+    Vector { _handler: UART1 },
+    Vector { _reserved: 0 },
+    Vector { _handler: TIMA0 },
+    Vector { _reserved: 0 },
+    Vector { _handler: TIMG8 },
+    Vector { _handler: TIMG0 },
+    Vector { _handler: TIMG4 },
+    Vector { _handler: TIMG5 },
+    Vector { _handler: I2C0 },
+    Vector { _handler: I2C1 },
+    Vector { _handler: I2C2 },
+    Vector { _reserved: 0 },
+    Vector { _handler: AESADV },
+    Vector { _handler: LCD0 },
+    Vector { _handler: LFSS },
+    Vector { _handler: DMA0 },
+];
 #[doc = r"Enumeration of all the interrupts."]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Interrupt {}
+#[repr(u16)]
+pub enum Interrupt {
+    #[doc = "0 - SYSCTL interrupt (group 0, IIDX 6)"]
+    INT_GROUP0 = 0,
+    #[doc = "1 - GPIOC interrupt (group 1, IIDX 6)"]
+    INT_GROUP1 = 1,
+    #[doc = "2 - TIMG12"]
+    TIMG12 = 2,
+    #[doc = "3 - UART4"]
+    UART4 = 3,
+    #[doc = "4 - ADC0"]
+    ADC0 = 4,
+    #[doc = "9 - SPI0"]
+    SPI0 = 9,
+    #[doc = "10 - SPI1"]
+    SPI1 = 10,
+    #[doc = "13 - UART2"]
+    UART2 = 13,
+    #[doc = "14 - UART3"]
+    UART3 = 14,
+    #[doc = "15 - UART0"]
+    UART0 = 15,
+    #[doc = "16 - UART1"]
+    UART1 = 16,
+    #[doc = "18 - TIMA0"]
+    TIMA0 = 18,
+    #[doc = "20 - TIMG8"]
+    TIMG8 = 20,
+    #[doc = "21 - TIMG0"]
+    TIMG0 = 21,
+    #[doc = "22 - TIMG4"]
+    TIMG4 = 22,
+    #[doc = "23 - TIMG5"]
+    TIMG5 = 23,
+    #[doc = "24 - I2C0"]
+    I2C0 = 24,
+    #[doc = "25 - I2C1"]
+    I2C1 = 25,
+    #[doc = "26 - I2C2"]
+    I2C2 = 26,
+    #[doc = "28 - AESADV"]
+    AESADV = 28,
+    #[doc = "29 - LCD0"]
+    LCD0 = 29,
+    #[doc = "30 - LFSS"]
+    LFSS = 30,
+    #[doc = "31 - DMA0"]
+    DMA0 = 31,
+}
 unsafe impl cortex_m::interrupt::InterruptNumber for Interrupt {
     #[inline(always)]
     fn number(self) -> u16 {
-        match self {}
+        self as u16
     }
 }
 #[doc = "DSSM"]
